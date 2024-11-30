@@ -6,6 +6,11 @@
 
 ### eventEmitter
 
+- on: 업데이트 된 상태가 들어왔을 때 실행되어야 하는 핸들러 등록
+- off: 컴포넌트가 unmount 될 때 사라져야 할 핸들러 지우기
+- get: 캡쳐링된 현재 value 리턴
+- set: 컴포넌트들 새 상태로 업데이트?
+
 ```javascript
 const createEventEmitter = (value) => {
   let handlers = [];
@@ -147,5 +152,52 @@ export default () => (
     <Count />
     <PlusButton />
   </CountProvider>
+);
+```
+
+## 고차컴포넌트
+
+```jsx
+class Header extends React.Component {
+  render() {
+    return <header>Header</header>;
+  }
+}
+class Button extends React.Component {
+  handleClick = () => {
+    this.props.log("클릭");
+  };
+
+  render() {
+    return <button onClick={this.handleClick}> 버튼 </button>;
+  }
+}
+
+const withLogging = (WrappedComponent) => {
+  function log(message) {
+    console.log(`[${getComponentName(WrappedComponent)}] ${message}`);
+  }
+  class WithLogging extends React.Component {
+    render() {
+      const enhancedProps = {
+        log,
+      };
+      return <WrappedComponent {...this.props} {...enhancedProps} />;
+    }
+    componentDidMount() {
+      log("mount");
+    }
+  }
+  return WithLogging;
+};
+
+const EnhancedHeader = withLogging(Header);
+const EnhancedButton = withLogging(Button);
+
+export default () => (
+  <>
+    <EnhancedHeader />
+    <EnhancedButton />
+  </>
 );
 ```

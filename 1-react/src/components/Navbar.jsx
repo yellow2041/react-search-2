@@ -1,12 +1,14 @@
+import * as MyRouter from "../lib/MyRouter";
+
 const Navbar = ({}) => {
   return (
     <nav className="Navbar">
-      <a className="active" href="#">
+      <MyRouter.Link className="active" to="/">
         메뉴목록
-      </a>
-      <a className="" href="#">
+      </MyRouter.Link>
+      <MyRouter.Link className="" to="/order">
         주문내역
-      </a>
+      </MyRouter.Link>
     </nav>
   );
 };
