@@ -1,11 +1,11 @@
 import React from "react";
-import FormControl from "../../components/FormControl";
 import Page from "../../components/Page";
 import ProductItem from "../../components/ProductItem";
 import Title from "../../components/Title";
 import OrderForm from "./OrderForm";
 import PaymentButton from "./PaymentButton";
 import ProductApi from "shared/api/ProductApi";
+import * as MyRouter from "../../lib/MyRouter";
 
 const fakeProduct = {
   id: "CACDA425",
@@ -31,8 +31,8 @@ class CartPage extends React.Component {
   }
 
   handleSubmit(values) {
-    console.log("Love it when it rains");
     console.log(values);
+    this.props.navigate("/order");
   }
 
   componentDidMount() {
@@ -56,4 +56,4 @@ class CartPage extends React.Component {
   }
 }
 
-export default CartPage;
+export default MyRouter.withRouter(CartPage);

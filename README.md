@@ -157,6 +157,8 @@ export default () => (
 
 ## 고차컴포넌트
 
+- 컴포넌트들에 공통적인 역할?(관심사)이 존재할 때 사용.
+
 ```jsx
 class Header extends React.Component {
   render() {
