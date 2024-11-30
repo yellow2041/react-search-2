@@ -7,13 +7,6 @@ import PaymentButton from "./PaymentButton";
 import ProductApi from "shared/api/ProductApi";
 import * as MyRouter from "../../lib/MyRouter";
 
-const fakeProduct = {
-  id: "CACDA425",
-  name: "매운 푸팟퐁 커리",
-  price: 20000,
-  thumbnail: "./images/menu-매운푸팟퐁커리.jpg",
-};
-
 class CartPage extends React.Component {
   constructor(props) {
     super(props);
@@ -22,8 +15,9 @@ class CartPage extends React.Component {
   }
 
   async fetch() {
+    const { productId } = this.props.params();
     try {
-      const product = await ProductApi.fetchProduct("CACDA425");
+      const product = await ProductApi.fetchProduct(productId);
       this.setState({ product });
     } catch (e) {
       console.error(e);

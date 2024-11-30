@@ -92,8 +92,22 @@ export const withRouter = (WrappedComponent) => {
           if (path !== nextPath) changePath(nextPath);
         };
 
+        const match = (comparedPath) => path === comparedPath;
+
+        const params = () => {
+          const params = new URLSearchParams(window.location.search);
+          const paramsObject = {};
+          console.log(params);
+          for (const [key, value] of params) {
+            paramsObject[key] = value;
+          }
+          return paramsObject;
+        };
+
         const enhancedProps = {
           navigate,
+          match,
+          params,
         };
 
         return <WrappedComponent {...props} {...enhancedProps} />;
