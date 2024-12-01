@@ -39,10 +39,16 @@ export const withLayout = (WrappedComponent) => {
         const openDialog = setDialog;
         const closeDialog = () => setDialog(null);
 
+        const startLoading = (message) =>
+          openDialog(<Dialog>{message}</Dialog>);
+        const finishLoading = closeDialog;
+
         const enhancedProps = {
           dialog,
           openDialog,
           closeDialog,
+          startLoading,
+          finishLoading,
         };
 
         return <WrappedComponent {...props} {...enhancedProps} />;
