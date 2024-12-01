@@ -1,18 +1,21 @@
 import React from "react";
 import * as MyRouter from "./lib/MyRouter";
-import CartPage from "./pages/CartPage";
+import * as MyLayout from "./lib/MyLayout";
 import OrderPage from "./pages/OrderPage";
 import ProductPage from "./pages/ProductPage";
-import { getComponentName } from "./lib/utils";
+import CartPage from "./pages/CartPage";
+import Dialog from "./components/Dialog";
 
 const App = () => (
-  <MyRouter.Router>
-    <MyRouter.Routes>
-      <MyRouter.Route path="/cart" element={<CartPage />} />
-      <MyRouter.Route path="/order" element={<OrderPage />} />
-      <MyRouter.Route path="/" element={<ProductPage />} />
-    </MyRouter.Routes>
-  </MyRouter.Router>
+  <MyLayout.Layout>
+    <MyRouter.Router>
+      <MyRouter.Routes>
+        <MyRouter.Route path="/cart" element={<CartPage />} />
+        <MyRouter.Route path="/order" element={<OrderPage />} />
+        <MyRouter.Route path="/" element={<ProductPage />} />
+      </MyRouter.Routes>
+    </MyRouter.Router>
+  </MyLayout.Layout>
 );
 
 export default App;

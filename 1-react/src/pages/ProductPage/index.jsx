@@ -6,13 +6,8 @@ import ProductItem from "../../components/ProductItem";
 import Title from "../../components/Title";
 import OrderableProductItem from "./OrderableProductItem";
 import FormControl from "../../components/FormControl";
-
-const fakeProduct = {
-  id: "CACDA421",
-  name: "해물 계란 라면",
-  price: 6000,
-  thumbnail: "./images/menu-해물계란라면.jpg",
-};
+import * as MyLayout from "../../lib/MyLayout";
+import Dialog from "../../components/Dialog";
 
 class ProductPage extends React.Component {
   constructor(props) {
@@ -23,9 +18,12 @@ class ProductPage extends React.Component {
   }
 
   async fetch() {
+    const { openDialog, closeDialog, dialog } = this.props;
+    openDialog(<Dialog />);
     try {
       const productList = await ProductApi.fetchProductList();
       this.setState({ productList });
+      closeDialog();
     } catch (e) {
       console.error(e);
     }
@@ -52,4 +50,4 @@ class ProductPage extends React.Component {
   }
 }
 
-export default ProductPage;
+export default MyLayout.withLayout(ProductPage);
