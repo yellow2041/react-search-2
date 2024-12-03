@@ -21,10 +21,11 @@ class OrderPage extends React.Component {
     try {
       const order = await OrderApi.fetchMyOrder();
       this.setState({ order });
-      finishLoading();
     } catch (e) {
-      console.error(e);
+      openDialog(<ErrorDialog />);
+      return;
     }
+    finishLoading();
   }
 
   componentDidMount() {

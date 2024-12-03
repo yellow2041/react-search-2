@@ -27,8 +27,10 @@ class CartPage extends React.Component {
       this.setState({ product });
       finishLoading();
     } catch (e) {
-      console.error(e);
+      openDialog(<ErrorDialog />);
+      return;
     }
+    finishLoading();
   }
 
   handleSubmit(values) {
