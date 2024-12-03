@@ -203,3 +203,22 @@ export default () => (
   </>
 );
 ```
+
+## OrderPage 하위에 Dialog가 존재하여 발생하는 문제
+
+- DialogContainer가 Page 하위에 존재하고 Page가 OrderPage 하위에 존재하여 발생.
+- css가 OrderPage>Page>main에 상속되어 해당 margin이 적용됨.
+  - 상속구조에서 벗어나야 한다.
+
+### react-dom createPortal 활용
+
+```jsx
+export const DialogContainer = withLayout(
+  ({ dialog }) =>
+    dialog &&
+    ReactDOM.createPortal(
+      <Backdrop>{dialog}</Backdrop>,
+      document.querySelector("#dialog")
+    )
+);
+```

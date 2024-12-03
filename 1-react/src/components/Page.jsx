@@ -1,5 +1,4 @@
 import * as MyLayout from "../lib/MyLayout";
-import Dialog from "./Dialog";
 
 const Page = ({ header, footer, children }) => {
   return (
