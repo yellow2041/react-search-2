@@ -5,6 +5,7 @@ import OrderPage from "./pages/OrderPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import Dialog from "./components/Dialog";
+import MyReact from "./lib/MyReact";
 
 const App = () => (
   <MyLayout.Layout>
@@ -18,4 +19,16 @@ const App = () => (
   </MyLayout.Layout>
 );
 
-export default App;
+function NameField() {
+  const [firstname, setFirstName] = MyReact.useName("jk");
+
+  const handleChange = (e) => {
+    setFirstName(e.target.value);
+    console.log(e.target.value);
+  };
+  return <input value={firstname} onChange={handleChange} />;
+}
+
+//export default App;
+
+export default () => <NameField />;
