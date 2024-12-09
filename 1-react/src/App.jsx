@@ -20,13 +20,21 @@ const App = () => (
 );
 
 function NameField() {
-  const [firstname, setFirstName] = MyReact.useName("jk");
+  const [firstname, setFirstName] = MyReact.useState("jk");
+  const [lastname, setLastname] = MyReact.useState("LEE");
 
-  const handleChange = (e) => {
+  const handleChangeFirstname = (e) => {
     setFirstName(e.target.value);
-    console.log(e.target.value);
   };
-  return <input value={firstname} onChange={handleChange} />;
+  const handleChangeLastname = (e) => {
+    setLastname(e.target.value);
+  };
+  return (
+    <>
+      <input value={firstname} onChange={handleChangeFirstname} />
+      <input value={lastname} onChange={handleChangeLastname} />
+    </>
+  );
 }
 
 //export default App;

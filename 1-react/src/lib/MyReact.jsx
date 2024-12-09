@@ -49,31 +49,42 @@ const MyReact = (function () {
     };
   }
 
-  let firstname;
-  let isInitialized = false;
-  function useName(initialValue = "") {
+  const memorizedStates = [];
+  const isInitialized = [];
+  let cursor = 0;
+
+  function useState(initialValue = "") {
     const { forceUpdate } = useForceUpdate();
 
-    if (!isInitialized) {
-      firstname = initialValue;
-      isInitialized = true;
+    if (!isInitialized[cursor]) {
+      memorizedStates[cursor] = initialValue;
+      isInitialized[cursor] = true;
     }
 
-    const setFirstname = (value) => {
-      if (firstname === value) return;
-      firstname = value;
+    const state = memorizedStates[cursor];
+
+    const setStateAt = (_cursor) => (nextState) => {
+      if (state === nextState) return;
+      memorizedStates[_cursor] = nextState;
       forceUpdate();
     };
-    return [firstname, setFirstname];
+    const setState = setStateAt(cursor);
+
+    cursor = cursor + 1;
+
+    return [state, setState];
   }
 
   function useForceUpdate() {
     const [value, setValue] = React.useState(1);
-    const forceUpdate = () => setValue(value + 1);
+    const forceUpdate = () => {
+      setValue(value + 1);
+      cursor = 0;
+    };
     return { forceUpdate };
   }
 
-  return { createContext, useName };
+  return { createContext, useState };
 })();
 
 export default MyReact;
