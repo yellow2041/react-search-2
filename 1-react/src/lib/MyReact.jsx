@@ -84,7 +84,14 @@ const MyReact = (function () {
     return { forceUpdate };
   }
 
-  return { createContext, useState };
+  function useEffect(effect) {
+    function runDeferedEffect() {
+      const ENOUGH_TIME_TO_RENDER = 1;
+      setTimeout(effect, ENOUGH_TIME_TO_RENDER);
+    }
+    runDeferedEffect();
+  }
+  return { createContext, useState, useEffect };
 })();
 
 export default MyReact;

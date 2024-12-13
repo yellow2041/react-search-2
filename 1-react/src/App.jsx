@@ -19,24 +19,20 @@ const App = () => (
   </MyLayout.Layout>
 );
 
-function NameField() {
-  const [firstname, setFirstName] = MyReact.useState("jk");
-  const [lastname, setLastname] = MyReact.useState("LEE");
+const Counter = () => {
+  const [count, setCount] = React.useState(0);
 
-  const handleChangeFirstname = (e) => {
-    setFirstName(e.target.value);
-  };
-  const handleChangeLastname = (e) => {
-    setLastname(e.target.value);
-  };
-  return (
-    <>
-      <input value={firstname} onChange={handleChangeFirstname} />
-      <input value={lastname} onChange={handleChangeLastname} />
-    </>
-  );
-}
+  MyReact.useEffect(() => {
+    document.title = `count: ${count}`;
+    console.log("effect1");
+  });
+
+  const handleClick = () => setCount(count + 1);
+
+  console.log("Counter rendered");
+  return <button onClick={handleClick}>더하기</button>;
+};
 
 //export default App;
 
-export default () => <NameField />;
+export default () => <Counter />;
