@@ -50,7 +50,9 @@ const MyReact = (function () {
   }
 
   const memorizedStates = [];
+  let deps = [];
   const isInitialized = [];
+  const cleanups = [];
   let cursor = 0;
 
   function useState(initialValue = "") {
@@ -84,14 +86,44 @@ const MyReact = (function () {
     return { forceUpdate };
   }
 
-  function useEffect(effect) {
+  function useEffect(effect, nextDeps) {
     function runDeferedEffect() {
+      function runEffect() {
+        const cleanup = effect();
+        if (cleanup) cleanup[cursor] = cleanup;
+      }
       const ENOUGH_TIME_TO_RENDER = 1;
       setTimeout(effect, ENOUGH_TIME_TO_RENDER);
     }
+    if (!isInitialized[cursor]) {
+      isInitialized[cursor] = true;
+      deps[cursor] = nextDeps;
+      cursor = cursor + 1;
+      runDeferedEffect();
+      return;
+    }
+    const prevDeps = deps[cursor];
+    const depsSame = prevDeps.every(
+      (prevDep, index) => prevDep === nextDeps[index]
+    );
+    if (depsSame) {
+      cursor = cursor + 1;
+      return;
+    }
+    deps[cursor] = nextDeps;
+    cursor = cursor + 1;
     runDeferedEffect();
   }
-  return { createContext, useState, useEffect };
+
+  function resetCursor() {
+    cursor = 0;
+  }
+
+  function cleanupEffects() {
+    cleanups.forEach((cleanup) => typeof cleanup === "function" && cleanup());
+  }
+
+  return { createContext, useState, useEffect, resetCursor, cleanupEffects };
 })();
 
 export default MyReact;
