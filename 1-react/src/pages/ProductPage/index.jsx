@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProductApi from "shared/api/ProductApi";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
@@ -10,46 +10,64 @@ import * as MyLayout from "../../lib/MyLayout";
 import Dialog from "../../components/Dialog";
 import ErrorDialog from "../../components/ErrorDialog";
 
-class ProductPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      productList: [],
-    };
-  }
+const ProductPage = () => {
+  const [productList, setProductList] = React.useState([]);
 
-  async fetch() {
-    const { startLoading, finishLoading, openDialog } = this.props;
-    startLoading("메뉴 목록 로딩중...");
+  const fetch = async () => {
     try {
       const productList = await ProductApi.fetchProductList();
-      this.setState({ productList });
+      setProductList(productList);
     } catch (e) {
-      openDialog(<ErrorDialog />);
+      //openDialog(<ErrorDialog />);
       return;
     }
-    finishLoading();
-  }
+  };
+  useEffect(() => {
+    fetch();
+  }, []);
+  return (
+    <div className="ProductPage">
+      <Page header={<Title>메뉴목록</Title>} footer={<Navbar />}>
+        <ul>
+          {productList.map((product) => (
+            <li key={product.id}>
+              <OrderableProductItem product={product} />
+            </li>
+          ))}
+        </ul>
+      </Page>
+    </div>
+  );
+};
 
-  componentDidMount() {
-    this.fetch();
-  }
+// class ProductPage extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       productList: [],
+//     };
+//   }
 
-  render() {
-    return (
-      <div className="ProductPage">
-        <Page header={<Title>메뉴목록</Title>} footer={<Navbar />}>
-          <ul>
-            {this.state.productList.map((product) => (
-              <li key={product.id}>
-                <OrderableProductItem product={product} />
-              </li>
-            ))}
-          </ul>
-        </Page>
-      </div>
-    );
-  }
-}
+//   async fetch() {
+//     const { startLoading, finishLoading, openDialog } = this.props;
+//     startLoading("메뉴 목록 로딩중...");
+//     try {
+//       const productList = await ProductApi.fetchProductList();
+//       this.setState({ productList });
+//     } catch (e) {
+//       openDialog(<ErrorDialog />);
+//       return;
+//     }
+//     finishLoading();
+//   }
 
-export default MyLayout.withLayout(ProductPage);
+//   componentDidMount() {
+//     this.fetch();
+//   }
+
+//   render() {
+
+//   }
+// }
+
+export default ProductPage;

@@ -6,7 +6,7 @@ const Page = ({ header, footer, children }) => {
       <header>{header}</header>
       <main>{children}</main>
       <footer>{footer}</footer>
-      <MyLayout.DialogContainer />
+      {/* <MyLayout.DialogContainer /> */}
     </div>
   );
 };
