@@ -8,7 +8,7 @@ import OrderPaymentCard from "./OrderPaymentCard";
 import OrderStatusCard from "./OrderStatusCard";
 import * as MyLayout from "../../lib/MyLayout";
 
-const OrderPage = (props) => {
+const OrderPage = () => {
   const [order, setOrder] = React.useState();
   const fetch = async () => {
     //const { startLoading, finishLoading } = props;

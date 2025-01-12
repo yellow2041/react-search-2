@@ -3,7 +3,8 @@ import * as MyLayout from "../../lib/MyLayout";
 import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
 
-const PaymentSuccessDialog = ({ navigate, closeDialog }) => {
+const PaymentSuccessDialog = ({ closeDialog }) => {
+  const navigate = MyRouter.useNavigate();
   const handleClickNo = () => {
     closeDialog();
     navigate("/");

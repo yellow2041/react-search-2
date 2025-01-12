@@ -13,6 +13,7 @@ import PaymentSuccessDialog from "./PaymentSuccessDialog";
 
 const CartPage = ({ startLoading, finishLoading, openDialog }) => {
   const [product, setProduct] = useState();
+  const { productId } = MyRouter.useParams();
 
   const handleSubmit = async (values) => {
     startLoading("결제중...");
@@ -36,8 +37,8 @@ const CartPage = ({ startLoading, finishLoading, openDialog }) => {
     }
   };
   useEffect(() => {
-    fetch("CACDA421");
-  }, []);
+    if (productId) fetch(productId);
+  }, [productId]);
   return (
     <div className="CartPage">
       <Page

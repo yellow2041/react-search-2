@@ -7,31 +7,15 @@ import { getComponentName } from "./utils";
 export const layoutContext = React.createContext({});
 layoutContext.displayName = "LayoutContext";
 
-export class Layout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dialog: null,
-    };
-    this.setDialog = this.setDialog.bind(this);
-  }
+export const Layout = ({ children }) => {
+  const [dialog, setDialog] = React.useState(null);
 
-  setDialog(dialog) {
-    this.setState({ dialog });
-  }
-
-  render() {
-    const value = {
-      dialog: this.state.dialog,
-      setDialog: this.setDialog,
-    };
-    return (
-      <layoutContext.Provider value={value}>
-        {this.props.children}
-      </layoutContext.Provider>
-    );
-  }
-}
+  return (
+    <layoutContext.Provider value={{ dialog, setDialog }}>
+      {children}
+    </layoutContext.Provider>
+  );
+};
 
 export const withLayout = (WrappedComponent) => {
   const WithLayout = (props) => (

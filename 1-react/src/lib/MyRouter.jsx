@@ -4,85 +4,70 @@ import { getComponentName } from "./utils";
 export const routerContext = React.createContext({});
 routerContext.displayName = "RouterContext";
 
-export class Router extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      path: window.location.pathname,
-    };
-    this.handleChangePath = this.handleChangePath.bind(this);
-    this.handleOnPopstate = this.handleOnPopstate.bind(this);
-  }
+export const Router = ({ children }) => {
+  const [path, setPath] = React.useState(window.location.pathname);
 
-  handleChangePath(path) {
-    this.setState({ path });
-    window.history.pushState("", "", path);
-  }
+  const changePath = (path) => {
+    setPath(path);
+    window.history.pushState({ path }, "", path);
+  };
 
-  handleOnPopstate(event) {
+  const handleOnPopstate = (event) => {
     const nextPath = event.state && event.state.path;
     if (!nextPath) return;
-    this.setState({ path: nextPath });
-  }
+    setPath(nextPath);
+  };
 
-  componentDidMount() {
-    window.addEventListener("popstate", this.handleOnPopstate);
-    window.history.replaceState({ path: this.state.path }, "");
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("popstate", this.handleOnPopstate);
-  }
-
-  render() {
-    const contextValue = {
-      path: this.state.path,
-      changePath: this.handleChangePath,
+  React.useEffect(() => {
+    window.addEventListener("popstate", handleOnPopstate);
+    window.history.replaceState({ path }, "");
+    return () => {
+      window.removeEventListener("popstate", handleOnPopstate);
     };
+  }, [path]);
 
-    return (
-      <routerContext.Provider value={contextValue}>
-        {this.props.children}
-      </routerContext.Provider>
-    );
-  }
-}
+  const contextValue = {
+    path,
+    changePath,
+  };
+
+  return (
+    <routerContext.Provider value={contextValue}>
+      {children}
+    </routerContext.Provider>
+  );
+};
 
 export const Routes = ({ children }) => {
-  return (
-    <routerContext.Consumer>
-      {({ path }) => {
-        let selectedRoute = null;
-        React.Children.forEach(children, (child) => {
-          if (!React.isValidElement(child)) return;
+  const { path } = React.useContext(routerContext);
 
-          if (child.type === React.Fragment) return;
+  let selectedRoute = null;
 
-          if (!child.props.path || !child.props.element) return;
+  React.Children.forEach(children, (child) => {
+    if (!React.isValidElement(child)) return;
 
-          if (child.props.path !== path.replace(/\?.*$/, "")) return;
+    if (child.type === React.Fragment) return;
 
-          selectedRoute = child.props.element;
-        });
-        return selectedRoute;
-      }}
-    </routerContext.Consumer>
-  );
+    if (!child.props.path || !child.props.element) return;
+
+    if (child.props.path !== path.replace(/\?.*$/, "")) return;
+
+    selectedRoute = child.props.element;
+  });
+  return selectedRoute;
 };
 
 export const Route = () => null;
 
-export const Link = ({ to, ...rest }) => (
-  <routerContext.Consumer>
-    {({ path, changePath }) => {
-      const handleClick = (e) => {
-        e.preventDefault();
-        if (to !== path) changePath(to);
-      };
-      return <a {...rest} href={to} onClick={handleClick} />;
-    }}
-  </routerContext.Consumer>
-);
+export const Link = ({ to, ...rest }) => {
+  const { path, changePath } = React.useContext(routerContext);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (to !== path) changePath(to);
+  };
+  return <a {...rest} href={to} onClick={handleClick} />;
+};
 
 export const withRouter = (WrappedComponent) => {
   const WithRouter = (props) => (
@@ -117,4 +102,29 @@ export const withRouter = (WrappedComponent) => {
   WithRouter.displayName = `WithRouter(${getComponentName(WrappedComponent)})`;
 
   return WithRouter;
+};
+
+export const useNavigate = () => {
+  const { path, changePath } = React.useContext(routerContext);
+  const navigate = (nextPath) => {
+    if (path !== nextPath) changePath(nextPath);
+  };
+  return navigate;
+};
+
+export const useMatch = () => {
+  const { path } = React.useContext(routerContext);
+  const match = (comparedPath) => path === comparedPath;
+  return match;
+};
+export const useParams = () => {
+  const params = () => {
+    const params = new URLSearchParams(window.location.search);
+    const paramsObject = {};
+    for (const [key, value] of params) {
+      paramsObject[key] = value;
+    }
+    return paramsObject;
+  };
+  return params;
 };
